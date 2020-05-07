@@ -5,7 +5,6 @@ class PostsController < ApplicationController
   end
 
   def show
-    # find_byを用いてpostsテーブルから「params[:id]」に対応するデータを取り出し、変数@postに代入する。
     @post = Post.find_by(id:params[:id])
   end
 
@@ -16,6 +15,9 @@ class PostsController < ApplicationController
   	@post = Post.new(content: params[:content])
     @post.save
     redirect_to("/posts/index")
+  end
+
+  def edit
   end
 
 end
