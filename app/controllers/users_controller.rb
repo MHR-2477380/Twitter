@@ -16,9 +16,12 @@ class UsersController < ApplicationController
     @user = User.new(
       name: params[:name],
       email: params[:email],
-      image_name: "no_image.jpeg"
+      image_name: "no_image.jpeg",
+      password: params[:password]
     )
     if @user.save
+      # 新規登録後もログイン情報を保持させるためにsessionを使う
+      session[:user_id] = @user.id
       flash[:notice] = "ユーザー登録が完了しました"
       redirect_to("/users/#{@user.id}")
     else
@@ -51,6 +54,36 @@ class UsersController < ApplicationController
     else
       render("users/edit")
     end
+  end
+
+  def login_form
+  end
+
+  def login
+    # 入力内容と一致するユーザーを取得し、変数@userに代入する
+    @user = User.find_by(email: params[:email], password: params[:password])
+    # @userが存在するかどうかを判定するif文
+    if @user
+      # 変数sessionに、ログインに成功したユーザーのidを代入
+      session[:user_id] = @user.id
+      # フラッシュメッセージ
+      flash[:notice] = "ログインしました"
+      redirect_to("/posts/index")
+    else
+       # @error_messageを定義
+      @error_message = "メールアドレスまたはパスワードが間違っています"
+      # @emailと@passwordを定義
+      @email = params[:email]
+      @password = params[:password]
+      # 一致するユーザーがいなければログインフォームへレンダー
+      render("users/login_form")
+    end
+  end
+
+  def logout
+    session[:user_id] = nil
+    flash[:notice] = "ログアウトしました"
+    redirect_to("/login")
   end
 
 end
