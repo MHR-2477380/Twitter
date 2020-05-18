@@ -21,7 +21,10 @@
           <span class="fa fa-heart like-btn"></span>
         <% end %>
       <% end %>
-      
+
+      <!-- いいねのカウント数を表示させる -->
+      <%= @likes_count %>
+
       <% if @post.user_id == @current_user.id %>
         <div class="post-menus">
           <%= link_to("編集", "/posts/#{@post.id}/edit") %>
